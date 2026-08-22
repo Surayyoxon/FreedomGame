@@ -23,6 +23,10 @@ public class Building : MonoBehaviour
     [SerializeField] private int foodProduction = 10;
     [SerializeField] private float productionInterval = 5f;
 
+    [Header("Build Sound")]
+    [SerializeField] private AudioClip buildSound;
+    [SerializeField] private float buildSoundVolume = 0.8f;
+
     private bool activated = false;
 
     public void Activate()
@@ -31,6 +35,15 @@ public class Building : MonoBehaviour
             return;
 
         activated = true;
+
+        if (buildSound != null)
+        {
+            AudioSource.PlayClipAtPoint(
+                buildSound,
+                transform.position,
+                buildSoundVolume
+            );
+        }
 
         if (DependencyManager.Instance == null)
         {
@@ -95,7 +108,6 @@ public class Building : MonoBehaviour
             "%"
         );
 
-        // Objective system
         if (ObjectiveManager.Instance != null)
         {
             ObjectiveManager.Instance
@@ -122,7 +134,7 @@ public class Building : MonoBehaviour
         );
 
         Debug.Log(
-            "🌾 Farm produced Food: +" +
+            "Farm produced Food: +" +
             foodProduction
         );
     }

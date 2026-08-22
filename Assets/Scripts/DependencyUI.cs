@@ -12,6 +12,7 @@ public class DependencyUI : MonoBehaviour
 
     [Header("Resource Texts")]
     [SerializeField] private TMP_Text foodAmountText;
+    [SerializeField] private TMP_Text moneyText;
 
     private void Update()
     {
@@ -20,38 +21,53 @@ public class DependencyUI : MonoBehaviour
 
         // DEPENDENCY
 
-        electricityText.text =
-            "Electricity   " +
-            Mathf.RoundToInt(
-                DependencyManager.Instance.Electricity
-            ) + "%";
+        if (electricityText != null)
+        {
+            electricityText.text =
+                "Electricity   " +
+                Mathf.RoundToInt(
+                    DependencyManager.Instance.Electricity
+                ) + "%";
+        }
 
-        waterText.text =
-            "Water   " +
-            Mathf.RoundToInt(
-                DependencyManager.Instance.Water
-            ) + "%";
+        if (waterText != null)
+        {
+            waterText.text =
+                "Water   " +
+                Mathf.RoundToInt(
+                    DependencyManager.Instance.Water
+                ) + "%";
+        }
 
-        foodText.text =
-            "Food   " +
-            Mathf.RoundToInt(
-                DependencyManager.Instance.Food
-            ) + "%";
+        if (foodText != null)
+        {
+            foodText.text =
+                "Food   " +
+                Mathf.RoundToInt(
+                    DependencyManager.Instance.Food
+                ) + "%";
+        }
 
-        technologyText.text =
-            "Technology   " +
-            Mathf.RoundToInt(
-                DependencyManager.Instance.Technology
-            ) + "%";
+        if (technologyText != null)
+        {
+            technologyText.text =
+                "Technology   " +
+                Mathf.RoundToInt(
+                    DependencyManager.Instance.Technology
+                ) + "%";
+        }
 
-        independenceText.text =
-            "INDEPENDENCE   " +
-            DependencyManager.Instance
-                .GetIndependence()
-                .ToString("0") + "%";
+        if (independenceText != null)
+        {
+            independenceText.text =
+                "INDEPENDENCE   " +
+                DependencyManager.Instance
+                    .GetIndependence()
+                    .ToString("0") +
+                "%";
+        }
 
-
-        // REAL FOOD RESOURCE
+        // REAL FOOD
 
         if (ResourceManager.Instance != null &&
             foodAmountText != null)
@@ -59,6 +75,16 @@ public class DependencyUI : MonoBehaviour
             foodAmountText.text =
                 "Food: " +
                 ResourceManager.Instance.GetFood();
+        }
+
+        // MONEY
+
+        if (ResourceManager.Instance != null &&
+            moneyText != null)
+        {
+            moneyText.text =
+                "MONEY: $" +
+                ResourceManager.Instance.GetMoney();
         }
     }
 }

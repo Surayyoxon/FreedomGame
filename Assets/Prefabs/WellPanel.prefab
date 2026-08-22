@@ -121,3 +121,7 @@ MonoBehaviour:
   buildingType: 1
   cost: 40
   dependencyReduction: 25
+  foodProduction: 10
+  productionInterval: 5
+  buildSound: {fileID: 8300000, guid: 08de42d1d68ab794ab6cf9f8eaae16b2, type: 3}
+  buildSoundVolume: 0.8
