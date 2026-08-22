@@ -60,34 +60,25 @@ public class BuildingSystem : MonoBehaviour
 
     private void Update()
     {
-        /*
-         * B bosilganda Solar avtomatik tanlanmaydi.
-         * Hozircha:
-         *
-         * 1 = Solar
-         * 2 = Well
-         * 3 = Farm
-         * 4 = Workshop
-         */
-
+        // Keyboard shortcuts
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            SelectBuilding(solarPanelPrefab);
+            SelectSolar();
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            SelectBuilding(wellPrefab);
+            SelectWell();
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            SelectBuilding(farmPrefab);
+            SelectFarm();
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            SelectBuilding(workshopPrefab);
+            SelectWorkshop();
         }
 
         if (!isBuilding)
@@ -95,6 +86,7 @@ public class BuildingSystem : MonoBehaviour
 
         UpdatePreview();
 
+        // Left mouse = build
         if (Input.GetMouseButtonDown(0))
         {
             if (canBuild)
@@ -109,6 +101,7 @@ public class BuildingSystem : MonoBehaviour
             }
         }
 
+        // Escape = cancel
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             CancelBuilding();
@@ -116,10 +109,10 @@ public class BuildingSystem : MonoBehaviour
     }
 
     // ==================================================
-    // SELECT BUILDING
+    // BUILDING SELECTION
     // ==================================================
 
-    private void SelectBuilding(GameObject prefab)
+    public void SelectBuilding(GameObject prefab)
     {
         if (prefab == null)
         {
@@ -130,7 +123,7 @@ public class BuildingSystem : MonoBehaviour
             return;
         }
 
-        // Oldingi preview bo'lsa o'chiramiz
+        // Oldingi previewni o'chirish
         if (previewObject != null)
         {
             Destroy(previewObject);
@@ -142,7 +135,6 @@ public class BuildingSystem : MonoBehaviour
             Instantiate(selectedPrefab);
 
         isBuilding = true;
-
         canBuild = false;
 
         SetPreviewMode(true);
@@ -151,6 +143,30 @@ public class BuildingSystem : MonoBehaviour
             "Building selected: " +
             selectedPrefab.name
         );
+    }
+
+    // ==================================================
+    // UI BUTTON METHODS
+    // ==================================================
+
+    public void SelectSolar()
+    {
+        SelectBuilding(solarPanelPrefab);
+    }
+
+    public void SelectWell()
+    {
+        SelectBuilding(wellPrefab);
+    }
+
+    public void SelectFarm()
+    {
+        SelectBuilding(farmPrefab);
+    }
+
+    public void SelectWorkshop()
+    {
+        SelectBuilding(workshopPrefab);
     }
 
     // ==================================================
@@ -182,6 +198,7 @@ public class BuildingSystem : MonoBehaviour
             position.y +=
                 groundOffset;
 
+            // Preview mouse turgan joyga boradi
             previewObject.transform.position =
                 position;
 
@@ -319,7 +336,7 @@ public class BuildingSystem : MonoBehaviour
     // CANCEL
     // ==================================================
 
-    private void CancelBuilding()
+    public void CancelBuilding()
     {
         if (previewObject != null)
         {

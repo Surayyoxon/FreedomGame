@@ -8,73 +8,57 @@ public class DependencyUI : MonoBehaviour
     [SerializeField] private TMP_Text waterText;
     [SerializeField] private TMP_Text foodText;
     [SerializeField] private TMP_Text technologyText;
-
-    [Header("Independence")]
     [SerializeField] private TMP_Text independenceText;
+
+    [Header("Resource Texts")]
+    [SerializeField] private TMP_Text foodAmountText;
 
     private void Update()
     {
         if (DependencyManager.Instance == null)
             return;
 
-        float electricity =
-            DependencyManager.Instance.Electricity;
+        // DEPENDENCY
 
-        float water =
-            DependencyManager.Instance.Water;
+        electricityText.text =
+            "Electricity   " +
+            Mathf.RoundToInt(
+                DependencyManager.Instance.Electricity
+            ) + "%";
 
-        float food =
-            DependencyManager.Instance.Food;
+        waterText.text =
+            "Water   " +
+            Mathf.RoundToInt(
+                DependencyManager.Instance.Water
+            ) + "%";
 
-        float technology =
-            DependencyManager.Instance.Technology;
+        foodText.text =
+            "Food   " +
+            Mathf.RoundToInt(
+                DependencyManager.Instance.Food
+            ) + "%";
 
-        float independence =
-            DependencyManager.Instance.GetIndependence();
+        technologyText.text =
+            "Technology   " +
+            Mathf.RoundToInt(
+                DependencyManager.Instance.Technology
+            ) + "%";
 
-        // Electricity
-        if (electricityText != null)
+        independenceText.text =
+            "INDEPENDENCE   " +
+            DependencyManager.Instance
+                .GetIndependence()
+                .ToString("0") + "%";
+
+
+        // REAL FOOD RESOURCE
+
+        if (ResourceManager.Instance != null &&
+            foodAmountText != null)
         {
-            electricityText.text =
-                "Electricity   " +
-                Mathf.RoundToInt(electricity) +
-                "%";
-        }
-
-        // Water
-        if (waterText != null)
-        {
-            waterText.text =
-                "Water   " +
-                Mathf.RoundToInt(water) +
-                "%";
-        }
-
-        // Food
-        if (foodText != null)
-        {
-            foodText.text =
-                "Food   " +
-                Mathf.RoundToInt(food) +
-                "%";
-        }
-
-        // Technology
-        if (technologyText != null)
-        {
-            technologyText.text =
-                "Technology   " +
-                Mathf.RoundToInt(technology) +
-                "%";
-        }
-
-        // Independence
-        if (independenceText != null)
-        {
-            independenceText.text =
-                "INDEPENDENCE   " +
-                Mathf.RoundToInt(independence) +
-                "%";
+            foodAmountText.text =
+                "Food: " +
+                ResourceManager.Instance.GetFood();
         }
     }
 }

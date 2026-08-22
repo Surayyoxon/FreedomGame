@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Building : MonoBehaviour
 {
@@ -18,6 +18,10 @@ public class Building : MonoBehaviour
 
     [Header("Dependency Reduction")]
     [SerializeField] private float dependencyReduction = 25f;
+
+    [Header("Production")]
+    [SerializeField] private int foodProduction = 10;
+    [SerializeField] private float productionInterval = 5f;
 
     private bool activated = false;
 
@@ -64,6 +68,12 @@ public class Building : MonoBehaviour
                         dependencyReduction
                     );
 
+                InvokeRepeating(
+                    nameof(ProduceFood),
+                    productionInterval,
+                    productionInterval
+                );
+
                 break;
 
             case BuildingType.Workshop:
@@ -83,6 +93,37 @@ public class Building : MonoBehaviour
                 .GetIndependence()
                 .ToString("0") +
             "%"
+        );
+
+        // Objective system
+        if (ObjectiveManager.Instance != null)
+        {
+            ObjectiveManager.Instance
+                .BuildingCompleted(buildingType);
+
+            ObjectiveManager.Instance
+                .CheckFinalObjective();
+        }
+    }
+
+    private void ProduceFood()
+    {
+        if (ResourceManager.Instance == null)
+        {
+            Debug.LogError(
+                "ResourceManager topilmadi!"
+            );
+
+            return;
+        }
+
+        ResourceManager.Instance.AddFood(
+            foodProduction
+        );
+
+        Debug.Log(
+            "🌾 Farm produced Food: +" +
+            foodProduction
         );
     }
 

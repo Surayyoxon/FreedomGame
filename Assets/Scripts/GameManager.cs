@@ -8,6 +8,12 @@ public class GameManager : MonoBehaviour
     [Header("Game State")]
     public bool gameWon = false;
 
+    [Header("Intro")]
+    [SerializeField] private GameObject introPanel;
+
+    [Header("Build UI")]
+    [SerializeField] private GameObject buildPanel;
+
     [Header("Victory UI")]
     [SerializeField] private GameObject victoryPanel;
 
@@ -26,15 +32,41 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        // Intro ochiq
+        if (introPanel != null)
+        {
+            introPanel.SetActive(true);
+        }
+
+        // Build UI boshida yopiq
+        if (buildPanel != null)
+        {
+            buildPanel.SetActive(false);
+        }
+
+        // Victory boshida yopiq
         if (victoryPanel != null)
         {
             victoryPanel.SetActive(false);
         }
     }
 
-    // =========================================
-    // WIN GAME
-    // =========================================
+    public void StartGame()
+    {
+        // Intro yopiladi
+        if (introPanel != null)
+        {
+            introPanel.SetActive(false);
+        }
+
+        // Build UI ochiladi
+        if (buildPanel != null)
+        {
+            buildPanel.SetActive(true);
+        }
+
+        Debug.Log("GAME STARTED!");
+    }
 
     public void WinGame()
     {
@@ -43,19 +75,18 @@ public class GameManager : MonoBehaviour
 
         gameWon = true;
 
-        Debug.Log("🎉 VILLAGE IS INDEPENDENT!");
-
         if (victoryPanel != null)
         {
             victoryPanel.SetActive(true);
         }
 
-        // Player movementni keyin shu yerda to'xtatamiz
-    }
+        if (buildPanel != null)
+        {
+            buildPanel.SetActive(false);
+        }
 
-    // =========================================
-    // RESTART
-    // =========================================
+        Debug.Log("VILLAGE IS INDEPENDENT!");
+    }
 
     public void RestartGame()
     {
