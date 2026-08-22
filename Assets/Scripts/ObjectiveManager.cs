@@ -1,25 +1,41 @@
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 
 public class ObjectiveManager : MonoBehaviour
 {
     public static ObjectiveManager Instance;
 
-    [Header("UI")]
-    [SerializeField] private TMP_Text objectiveText;
-
-    [Header("Objectives")]
-    [SerializeField]
-    private string[] objectives =
+    public enum ObjectiveType
     {
-        "Build a Solar Panel.",
-        "Build a Well.",
-        "Build a Farm.",
-        "Build a Workshop.",
-        "Make the village 100% independent!"
-    };
+        CollectCoinsForSolar,
+        BuildSolar,
+        CollectMaterialsForWell,
+        BuildWell,
+        CollectSeedsForFarm,
+        BuildFarm,
+        CollectPartsForWorkshop,
+        BuildWorkshop,
+        Complete
+    }
 
-    private int currentObjective = 0;
+    [Header("UI")]
+    [SerializeField] private TMP_Text objectiveTitleText;
+    [SerializeField] private TMP_Text objectiveDescriptionText;
+    [SerializeField] private TMP_Text progressText;
+
+    [Header("Current Objective")]
+    [SerializeField] private ObjectiveType currentObjective;
+
+    [Header("Required Amounts")]
+    [SerializeField] private int solarCoinsRequired = 5;
+    [SerializeField] private int wellMaterialsRequired = 3;
+    [SerializeField] private int farmSeedsRequired = 3;
+    [SerializeField] private int workshopPartsRequired = 3;
+
+    private int solarCoins;
+    private int wellMaterials;
+    private int farmSeeds;
+    private int workshopParts;
 
     private void Awake()
     {
@@ -36,57 +52,158 @@ public class ObjectiveManager : MonoBehaviour
 
     private void Start()
     {
-        UpdateObjectiveUI();
+        currentObjective =
+            ObjectiveType.CollectCoinsForSolar;
+
+        UpdateUI();
     }
 
-    public void BuildingCompleted(Building.BuildingType buildingType)
+    // =========================================
+    // OBJECTIVE PROGRESS
+    // =========================================
+
+    public void AddSolarCoin()
     {
-        if (currentObjective >= objectives.Length)
+        if (currentObjective !=
+            ObjectiveType.CollectCoinsForSolar)
             return;
 
-        bool correctBuilding = false;
+        solarCoins++;
 
+        if (solarCoins >= solarCoinsRequired)
+        {
+            currentObjective =
+                ObjectiveType.BuildSolar;
+        }
+
+        UpdateUI();
+    }
+
+    public void AddWellMaterial()
+    {
+        if (currentObjective !=
+            ObjectiveType.CollectMaterialsForWell)
+            return;
+
+        wellMaterials++;
+
+        if (wellMaterials >= wellMaterialsRequired)
+        {
+            currentObjective =
+                ObjectiveType.BuildWell;
+        }
+
+        UpdateUI();
+    }
+
+    public void AddFarmSeed()
+    {
+        if (currentObjective !=
+            ObjectiveType.CollectSeedsForFarm)
+            return;
+
+        farmSeeds++;
+
+        if (farmSeeds >= farmSeedsRequired)
+        {
+            currentObjective =
+                ObjectiveType.BuildFarm;
+        }
+
+        UpdateUI();
+    }
+
+    public void AddWorkshopPart()
+    {
+        if (currentObjective !=
+            ObjectiveType.CollectPartsForWorkshop)
+            return;
+
+        workshopParts++;
+
+        if (workshopParts >= workshopPartsRequired)
+        {
+            currentObjective =
+                ObjectiveType.BuildWorkshop;
+        }
+
+        UpdateUI();
+    }
+
+    // =========================================
+    // BUILDING COMPLETED
+    // =========================================
+
+    public void BuildingCompleted(
+        Building.BuildingType buildingType)
+    {
         switch (currentObjective)
         {
-            case 0:
-                correctBuilding =
-                    buildingType == Building.BuildingType.Solar;
+            case ObjectiveType.BuildSolar:
+
+                if (buildingType ==
+                    Building.BuildingType.Solar)
+                {
+                    currentObjective =
+                        ObjectiveType.CollectMaterialsForWell;
+                }
+
                 break;
 
-            case 1:
-                correctBuilding =
-                    buildingType == Building.BuildingType.Well;
+            case ObjectiveType.BuildWell:
+
+                if (buildingType ==
+                    Building.BuildingType.Well)
+                {
+                    currentObjective =
+                        ObjectiveType.CollectSeedsForFarm;
+                }
+
                 break;
 
-            case 2:
-                correctBuilding =
-                    buildingType == Building.BuildingType.Farm;
+            case ObjectiveType.BuildFarm:
+
+                if (buildingType ==
+                    Building.BuildingType.Farm)
+                {
+                    currentObjective =
+                        ObjectiveType.CollectPartsForWorkshop;
+                }
+
                 break;
 
-            case 3:
-                correctBuilding =
-                    buildingType == Building.BuildingType.Workshop;
+            case ObjectiveType.BuildWorkshop:
+
+                if (buildingType ==
+                    Building.BuildingType.Workshop)
+                {
+                    currentObjective =
+                        ObjectiveType.Complete;
+                }
+
                 break;
         }
 
-        if (!correctBuilding)
-            return;
-
-        currentObjective++;
-
-        UpdateObjectiveUI();
+        UpdateUI();
     }
+
+    // =========================================
+    // FINAL
+    // =========================================
 
     public void CheckFinalObjective()
     {
         if (DependencyManager.Instance == null)
             return;
 
-        if (DependencyManager.Instance.GetIndependence() >= 100f)
-        {
-            currentObjective = objectives.Length - 1;
+        if (currentObjective !=
+            ObjectiveType.Complete)
+            return;
 
-            UpdateObjectiveUI();
+        if (DependencyManager.Instance
+            .GetIndependence() >= 100f)
+        {
+            UpdateUI();
 
             if (GameManager.Instance != null)
             {
@@ -95,20 +212,149 @@ public class ObjectiveManager : MonoBehaviour
         }
     }
 
-    private void UpdateObjectiveUI()
+    // =========================================
+    // UI
+    // =========================================
+
+    private void UpdateUI()
     {
-        if (objectiveText == null)
+        if (objectiveTitleText == null ||
+            objectiveDescriptionText == null ||
+            progressText == null)
             return;
 
-        if (currentObjective >= objectives.Length)
+        switch (currentObjective)
         {
-            objectiveText.text =
-                "VILLAGE IS INDEPENDENT!";
-            return;
-        }
+            case ObjectiveType.CollectCoinsForSolar:
 
-        objectiveText.text =
-            "OBJECTIVE\n" +
-            objectives[currentObjective];
+                objectiveTitleText.text =
+                    "VAZIFA";
+
+                objectiveDescriptionText.text =
+                    "☀️ SOLAR ENERGIYA\n" +
+                    "5 ta tanga to'plang.";
+
+                progressText.text =
+                    "Tangalar: " +
+                    solarCoins +
+                    " / " +
+                    solarCoinsRequired;
+
+                break;
+
+            case ObjectiveType.BuildSolar:
+
+                objectiveTitleText.text =
+                    "VAZIFA";
+
+                objectiveDescriptionText.text =
+                    "☀️ SOLAR PANELNI QURING";
+
+                progressText.text =
+                    "Tayyor!";
+
+                break;
+
+            case ObjectiveType.CollectMaterialsForWell:
+
+                objectiveTitleText.text =
+                    "VAZIFA";
+
+                objectiveDescriptionText.text =
+                    "💧 QUDUQ UCHUN\n" +
+                    "3 ta material toping.";
+
+                progressText.text =
+                    "Materiallar: " +
+                    wellMaterials +
+                    " / " +
+                    wellMaterialsRequired;
+
+                break;
+
+            case ObjectiveType.BuildWell:
+
+                objectiveTitleText.text =
+                    "VAZIFA";
+
+                objectiveDescriptionText.text =
+                    "💧 QUDUQNI QURING";
+
+                progressText.text =
+                    "Tayyor!";
+
+                break;
+
+            case ObjectiveType.CollectSeedsForFarm:
+
+                objectiveTitleText.text =
+                    "VAZIFA";
+
+                objectiveDescriptionText.text =
+                    "🌾 3 ta urug' toping.";
+
+                progressText.text =
+                    "Urug'lar: " +
+                    farmSeeds +
+                    " / " +
+                    farmSeedsRequired;
+
+                break;
+
+            case ObjectiveType.BuildFarm:
+
+                objectiveTitleText.text =
+                    "VAZIFA";
+
+                objectiveDescriptionText.text =
+                    "🌾 FERMANI QURING";
+
+                progressText.text =
+                    "Tayyor!";
+
+                break;
+
+            case ObjectiveType.CollectPartsForWorkshop:
+
+                objectiveTitleText.text =
+                    "VAZIFA";
+
+                objectiveDescriptionText.text =
+                    "🔧 3 ta texnika detalini toping.";
+
+                progressText.text =
+                    "Detallar: " +
+                    workshopParts +
+                    " / " +
+                    workshopPartsRequired;
+
+                break;
+
+            case ObjectiveType.BuildWorkshop:
+
+                objectiveTitleText.text =
+                    "VAZIFA";
+
+                objectiveDescriptionText.text =
+                    "🔧 USTAXONANI QURING";
+
+                progressText.text =
+                    "Tayyor!";
+
+                break;
+
+            case ObjectiveType.Complete:
+
+                objectiveTitleText.text =
+                    "YAKUNIY VAZIFA";
+
+                objectiveDescriptionText.text =
+                    "QISHLOQNI 100% MUSTAQIL QILING.";
+
+                progressText.text =
+                    "Deyarli tayyor!";
+
+                break;
+        }
     }
 }

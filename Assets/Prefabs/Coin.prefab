@@ -122,3 +122,5 @@ MonoBehaviour:
   rotationSpeed: 120
   floatHeight: 0.15
   floatSpeed: 2
+  pickupSound: {fileID: 8300000, guid: a2703f72fe7011244843313a422b867b, type: 3}
+  soundVolume: 0.8

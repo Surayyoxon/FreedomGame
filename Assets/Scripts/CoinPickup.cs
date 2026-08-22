@@ -58,6 +58,11 @@ public class CoinPickup : MonoBehaviour
             moneyAmount
         );
 
+        if (ObjectiveManager.Instance != null)
+        {
+            ObjectiveManager.Instance.AddSolarCoin();
+        }
+
         if (pickupSound != null)
         {
             AudioSource.PlayClipAtPoint(

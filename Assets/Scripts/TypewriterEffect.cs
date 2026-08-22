@@ -15,11 +15,17 @@ public class TypewriterEffect : MonoBehaviour
 
     private string[] messages =
     {
-        "YOUR VILLAGE DEPENDS\nON THE OUTSIDE WORLD.",
+        "BU QISHLOQ TASHQI TA'MINOTGA QARAM.",
 
-        "Electricity.\nWater.\nFood.\nTechnology.",
+        "Elektr.\nSuv.\nOziq-ovqat.\nTexnologiya.",
 
-        "Build your own sources\nand become independent."
+        "Bularning barchasi tashqaridan keladi.",
+
+        "Lekin qishloq o'z kuchi bilan yashay oladi.",
+
+        "O'zimiz quring.\nO'zimiz ishlab chiqaring.\nO'z kelajagimizni o'zimiz yarating.",
+
+        "QISHLOQNI MUSTAQIL QILING."
     };
 
     private void Start()

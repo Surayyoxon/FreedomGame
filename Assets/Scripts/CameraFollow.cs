@@ -30,7 +30,6 @@ public class CameraFollow : MonoBehaviour
 
         Vector3 finalPosition = desiredPosition;
 
-        // Kamera va player orasida bino/devor borligini tekshiramiz
         Vector3 direction =
             desiredPosition - targetPosition;
 
@@ -56,7 +55,6 @@ public class CameraFollow : MonoBehaviour
             positionSmooth * Time.deltaTime
         );
 
-        // Playerga qarash
         Vector3 lookPosition =
             target.position + Vector3.up * 1f;
 

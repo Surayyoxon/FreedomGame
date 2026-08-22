@@ -18,6 +18,9 @@ public class PlayerController : MonoBehaviour
     [Header("Camera")]
     [SerializeField] private Transform cameraTransform;
 
+    [Header("Control")]
+    [SerializeField] private bool canMove = false;
+
     private CharacterController controller;
     private float verticalVelocity;
 
@@ -33,9 +36,19 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        Move();
+        // Intro vaqtida player yurmaydi
+        if (canMove)
+        {
+            Move();
+        }
+
         ApplyGravity();
         StickToGround();
+    }
+
+    public void SetMovementEnabled(bool enabled)
+    {
+        canMove = enabled;
     }
 
     private void Move()
@@ -71,7 +84,6 @@ public class PlayerController : MonoBehaviour
             movement * moveSpeed * Time.deltaTime
         );
 
-        // Harakat yo'nalishiga qarab rotate
         if (movement.sqrMagnitude > 0.01f)
         {
             Quaternion targetRotation =
@@ -103,7 +115,9 @@ public class PlayerController : MonoBehaviour
 
     private void StickToGround()
     {
-        Vector3 rayStart = transform.position + Vector3.up * 0.5f;
+        Vector3 rayStart =
+            transform.position +
+            Vector3.up * 0.5f;
 
         if (Physics.Raycast(
             rayStart,
@@ -116,7 +130,8 @@ public class PlayerController : MonoBehaviour
                 hit.point.y + groundOffset;
 
             float difference =
-                targetY - controller.transform.position.y;
+                targetY -
+                controller.transform.position.y;
 
             if (Mathf.Abs(difference) > 0.01f)
             {
