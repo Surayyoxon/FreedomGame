@@ -17,6 +17,10 @@ public class GameManager : MonoBehaviour
     [Header("Victory UI")]
     [SerializeField] private GameObject victoryPanel;
 
+    [Header("Victory Sound")]
+    [SerializeField] private AudioClip victorySound;
+    [SerializeField] private float victorySoundVolume = 1f;
+
     private void Awake()
     {
         if (Instance == null)
@@ -51,15 +55,17 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // =========================================
+    // START GAME
+    // =========================================
+
     public void StartGame()
     {
-        // Intro yopiladi
         if (introPanel != null)
         {
             introPanel.SetActive(false);
         }
 
-        // Build UI ochiladi
         if (buildPanel != null)
         {
             buildPanel.SetActive(true);
@@ -68,6 +74,10 @@ public class GameManager : MonoBehaviour
         Debug.Log("GAME STARTED!");
     }
 
+    // =========================================
+    // WIN GAME
+    // =========================================
+
     public void WinGame()
     {
         if (gameWon)
@@ -75,11 +85,23 @@ public class GameManager : MonoBehaviour
 
         gameWon = true;
 
+        // Victory sound
+        if (victorySound != null)
+        {
+            AudioSource.PlayClipAtPoint(
+                victorySound,
+                Vector3.zero,
+                victorySoundVolume
+            );
+        }
+
+        // Victory UI
         if (victoryPanel != null)
         {
             victoryPanel.SetActive(true);
         }
 
+        // Build UI yopiladi
         if (buildPanel != null)
         {
             buildPanel.SetActive(false);
@@ -87,6 +109,10 @@ public class GameManager : MonoBehaviour
 
         Debug.Log("VILLAGE IS INDEPENDENT!");
     }
+
+    // =========================================
+    // RESTART
+    // =========================================
 
     public void RestartGame()
     {

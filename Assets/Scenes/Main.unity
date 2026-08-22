@@ -13564,7 +13564,7 @@ GameObject:
   - component: {fileID: 86144422}
   - component: {fileID: 86144427}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -335411,6 +335411,8 @@ MonoBehaviour:
   introPanel: {fileID: 1906949252}
   buildPanel: {fileID: 868644966}
   victoryPanel: {fileID: 423821650}
+  victorySound: {fileID: 0}
+  victorySoundVolume: 1
 --- !u!114 &2093933252
 MonoBehaviour:
   m_ObjectHideFlags: 0
