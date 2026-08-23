@@ -5,17 +5,9 @@ public class DependencyManager : MonoBehaviour
     public static DependencyManager Instance;
 
     [Header("Dependency Levels")]
-
-    [Range(0, 100)]
     [SerializeField] private float electricity = 90f;
-
-    [Range(0, 100)]
     [SerializeField] private float water = 80f;
-
-    [Range(0, 100)]
     [SerializeField] private float food = 85f;
-
-    [Range(0, 100)]
     [SerializeField] private float technology = 95f;
 
     public float Electricity => electricity;
@@ -35,110 +27,59 @@ public class DependencyManager : MonoBehaviour
         }
     }
 
-    // =========================================
-    // ELECTRICITY
-    // =========================================
-
     public void ReduceElectricity(float amount)
     {
-        electricity =
-            Mathf.Clamp(
-                electricity - amount,
-                0f,
-                100f
-            );
-
-        CheckVictory();
+        electricity = 0f;
     }
-
-    // =========================================
-    // WATER
-    // =========================================
 
     public void ReduceWater(float amount)
     {
-        water =
-            Mathf.Clamp(
-                water - amount,
-                0f,
-                100f
-            );
-
-        CheckVictory();
+        water = 0f;
     }
-
-    // =========================================
-    // FOOD
-    // =========================================
 
     public void ReduceFood(float amount)
     {
-        food =
-            Mathf.Clamp(
-                food - amount,
-                0f,
-                100f
-            );
-
-        CheckVictory();
+        food = 0f;
     }
-
-    // =========================================
-    // TECHNOLOGY
-    // =========================================
 
     public void ReduceTechnology(float amount)
     {
-        technology =
-            Mathf.Clamp(
-                technology - amount,
-                0f,
-                100f
-            );
-
-        CheckVictory();
+        technology = 0f;
     }
 
-    // =========================================
-    // INDEPENDENCE
-    // =========================================
+    public void SetElectricityIndependent()
+    {
+        electricity = 0f;
+    }
+
+    public void SetWaterIndependent()
+    {
+        water = 0f;
+    }
+
+    public void SetFoodIndependent()
+    {
+        food = 0f;
+    }
+
+    public void SetTechnologyIndependent()
+    {
+        technology = 0f;
+    }
 
     public float GetIndependence()
     {
-        float totalDependency =
-            electricity +
-            water +
-            food +
-            technology;
+        float average =
+            (electricity + water + food + technology) / 4f;
 
-        float averageDependency =
-            totalDependency / 4f;
-
-        float independence =
-            100f - averageDependency;
-
-        return Mathf.Clamp(
-            independence,
-            0f,
-            100f
-        );
+        return Mathf.Clamp(100f - average, 0f, 100f);
     }
 
-    // =========================================
-    // VICTORY CHECK
-    // =========================================
-
-    private void CheckVictory()
+    public bool IsFullyIndependent()
     {
-        if (electricity <= 0f &&
-            water <= 0f &&
-            food <= 0f &&
-            technology <= 0f)
-        {
-            if (GameManager.Instance != null)
-            {
-                GameManager.Instance.WinGame();
-            }
-        }
+        return electricity <= 0f &&
+               water <= 0f &&
+               food <= 0f &&
+               technology <= 0f;
     }
 }

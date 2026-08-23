@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,6 +14,12 @@ public class GameManager : MonoBehaviour
 
     [Header("Build UI")]
     [SerializeField] private GameObject buildPanel;
+
+    [Header("Build Buttons")]
+    [SerializeField] private Button solarButton;
+    [SerializeField] private Button wellButton;
+    [SerializeField] private Button farmButton;
+    [SerializeField] private Button workshopButton;
 
     [Header("Objective UI")]
     [SerializeField] private GameObject objectivePanel;
@@ -79,6 +86,31 @@ public class GameManager : MonoBehaviour
         }
 
         // =========================
+        // BUILD BUTTONS
+        // =========================
+
+        // Faqat Solar boshida ochiq
+        if (solarButton != null)
+        {
+            solarButton.interactable = true;
+        }
+
+        if (wellButton != null)
+        {
+            wellButton.interactable = false;
+        }
+
+        if (farmButton != null)
+        {
+            farmButton.interactable = false;
+        }
+
+        if (workshopButton != null)
+        {
+            workshopButton.interactable = false;
+        }
+
+        // =========================
         // PLAYER
         // =========================
 
@@ -94,31 +126,94 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        // Intro yopiladi
         if (introPanel != null)
         {
             introPanel.SetActive(false);
         }
 
-        // Build UI ochiladi
         if (buildPanel != null)
         {
             buildPanel.SetActive(true);
         }
 
-        // Objective ochiladi
         if (objectivePanel != null)
         {
             objectivePanel.SetActive(true);
         }
 
-        // Player yurishi ochiladi
         if (playerController != null)
         {
             playerController.SetMovementEnabled(true);
         }
 
         Debug.Log("GAME STARTED!");
+    }
+
+    // =========================================
+    // UNLOCK WELL
+    // =========================================
+
+    public void UnlockWell()
+    {
+        if (wellButton != null)
+        {
+            wellButton.interactable = true;
+        }
+
+        Debug.Log("Well unlocked!");
+    }
+
+    // =========================================
+    // UNLOCK FARM
+    // =========================================
+
+    public void UnlockFarm()
+    {
+        if (farmButton != null)
+        {
+            farmButton.interactable = true;
+        }
+
+        Debug.Log("Farm unlocked!");
+    }
+
+    // =========================================
+    // UNLOCK WORKSHOP
+    // =========================================
+
+    public void UnlockWorkshop()
+    {
+        if (workshopButton != null)
+        {
+            workshopButton.interactable = true;
+        }
+
+        Debug.Log("Workshop unlocked!");
+    }
+
+    // =========================================
+    // TASK UNLOCK METHODS
+    // =========================================
+
+    public void UnlockWellTask()
+    {
+        Debug.Log(
+            "New Objective: Collect 3 materials for Well."
+        );
+    }
+
+    public void UnlockFarmTask()
+    {
+        Debug.Log(
+            "New Objective: Collect 3 seeds for Farm."
+        );
+    }
+
+    public void UnlockWorkshopTask()
+    {
+        Debug.Log(
+            "New Objective: Collect 3 parts for Workshop."
+        );
     }
 
     // =========================================
@@ -132,7 +227,6 @@ public class GameManager : MonoBehaviour
 
         gameWon = true;
 
-        // Victory sound
         if (victorySound != null)
         {
             AudioSource.PlayClipAtPoint(
@@ -142,25 +236,21 @@ public class GameManager : MonoBehaviour
             );
         }
 
-        // Victory UI
         if (victoryPanel != null)
         {
             victoryPanel.SetActive(true);
         }
 
-        // Build UI yopiladi
         if (buildPanel != null)
         {
             buildPanel.SetActive(false);
         }
 
-        // Objective UI yopiladi
         if (objectivePanel != null)
         {
             objectivePanel.SetActive(false);
         }
 
-        // Playerni to'xtatish
         if (playerController != null)
         {
             playerController.SetMovementEnabled(false);

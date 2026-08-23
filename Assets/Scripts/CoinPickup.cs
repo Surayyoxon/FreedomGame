@@ -1,10 +1,7 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CoinPickup : MonoBehaviour
 {
-    [Header("Reward")]
-    [SerializeField] private int moneyAmount = 10;
-
     [Header("Animation")]
     [SerializeField] private float rotationSpeed = 120f;
     [SerializeField] private float floatHeight = 0.15f;
@@ -24,11 +21,13 @@ public class CoinPickup : MonoBehaviour
 
     private void Update()
     {
+        // Coin aylanadi
         transform.Rotate(
             Vector3.up,
             rotationSpeed * Time.deltaTime
         );
 
+        // Biroz yuqoriga-pastga suzadi
         float y =
             startPosition.y +
             Mathf.Sin(Time.time * floatSpeed) *
@@ -49,20 +48,15 @@ public class CoinPickup : MonoBehaviour
         if (!other.CompareTag("Player"))
             return;
 
-        if (ResourceManager.Instance == null)
+        if (ObjectiveManager.Instance == null)
             return;
 
         collected = true;
 
-        ResourceManager.Instance.AddMoney(
-            moneyAmount
-        );
+        // Solar vazifasiga +1
+        ObjectiveManager.Instance.AddSolarCoin();
 
-        if (ObjectiveManager.Instance != null)
-        {
-            ObjectiveManager.Instance.AddSolarCoin();
-        }
-
+        // Pickup sound
         if (pickupSound != null)
         {
             AudioSource.PlayClipAtPoint(
@@ -73,9 +67,7 @@ public class CoinPickup : MonoBehaviour
         }
 
         Debug.Log(
-            "Coin collected! +" +
-            moneyAmount +
-            " Money"
+            "🪙 Solar coin collected!"
         );
 
         Destroy(gameObject);

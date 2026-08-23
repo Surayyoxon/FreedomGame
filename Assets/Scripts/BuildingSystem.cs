@@ -49,13 +49,6 @@ public class BuildingSystem : MonoBehaviour
                 "BuildingSystem: Player ulanmagan!"
             );
         }
-
-        if (ResourceManager.Instance == null)
-        {
-            Debug.LogError(
-                "BuildingSystem: ResourceManager topilmadi!"
-            );
-        }
     }
 
     private void Update()
@@ -86,7 +79,6 @@ public class BuildingSystem : MonoBehaviour
 
         UpdatePreview();
 
-        // Left mouse = build
         if (Input.GetMouseButtonDown(0))
         {
             if (canBuild)
@@ -101,7 +93,6 @@ public class BuildingSystem : MonoBehaviour
             }
         }
 
-        // Escape = cancel
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             CancelBuilding();
@@ -109,7 +100,53 @@ public class BuildingSystem : MonoBehaviour
     }
 
     // ==================================================
-    // BUILDING SELECTION
+    // CHECK WHETHER BUILDING IS CURRENTLY ALLOWED
+    // ==================================================
+
+    private bool IsBuildingAllowed(
+        Building.BuildingType buildingType)
+    {
+        if (ObjectiveManager.Instance == null)
+        {
+            Debug.LogError(
+                "ObjectiveManager topilmadi!"
+            );
+
+            return false;
+        }
+
+        ObjectiveManager.ObjectiveType objective =
+            ObjectiveManager.Instance
+                .GetCurrentObjective();
+
+        switch (buildingType)
+        {
+            case Building.BuildingType.Solar:
+
+                return objective ==
+                    ObjectiveManager.ObjectiveType.BuildSolar;
+
+            case Building.BuildingType.Well:
+
+                return objective ==
+                    ObjectiveManager.ObjectiveType.BuildWell;
+
+            case Building.BuildingType.Farm:
+
+                return objective ==
+                    ObjectiveManager.ObjectiveType.BuildFarm;
+
+            case Building.BuildingType.Workshop:
+
+                return objective ==
+                    ObjectiveManager.ObjectiveType.BuildWorkshop;
+        }
+
+        return false;
+    }
+
+    // ==================================================
+    // SELECT BUILDING
     // ==================================================
 
     public void SelectBuilding(GameObject prefab)
@@ -123,7 +160,31 @@ public class BuildingSystem : MonoBehaviour
             return;
         }
 
-        // Oldingi previewni o'chirish
+        Building building =
+            prefab.GetComponent<Building>();
+
+        if (building == null)
+        {
+            Debug.LogError(
+                "Prefabda Building componenti yo'q!"
+            );
+
+            return;
+        }
+
+        // Objective ruxsat bermasa qurilmaydi
+        if (!IsBuildingAllowed(
+            building.GetBuildingType()))
+        {
+            Debug.Log(
+                "Bu bino hali ochilmagan. " +
+                "Avval joriy vazifani bajaring."
+            );
+
+            return;
+        }
+
+        // Oldingi preview
         if (previewObject != null)
         {
             Destroy(previewObject);
@@ -198,18 +259,24 @@ public class BuildingSystem : MonoBehaviour
             position.y +=
                 groundOffset;
 
-            // Preview mouse turgan joyga boradi
             previewObject.transform.position =
                 position;
 
-            float distance =
-                Vector3.Distance(
-                    player.position,
-                    hit.point
-                );
+            if (player != null)
+            {
+                float distance =
+                    Vector3.Distance(
+                        player.position,
+                        hit.point
+                    );
 
-            canBuild =
-                distance <= buildDistance;
+                canBuild =
+                    distance <= buildDistance;
+            }
+            else
+            {
+                canBuild = true;
+            }
         }
         else
         {
@@ -225,6 +292,30 @@ public class BuildingSystem : MonoBehaviour
     {
         if (previewObject == null)
             return;
+
+        Building building =
+            previewObject.GetComponent<Building>();
+
+        if (building == null)
+        {
+            Debug.LogError(
+                "Previewda Building componenti yo'q!"
+            );
+
+            return;
+        }
+
+        // Yana bir marta tekshiramiz
+        if (!IsBuildingAllowed(
+            building.GetBuildingType()))
+        {
+            Debug.Log(
+                "Bu bino uchun vazifa hali bajarilmagan!"
+            );
+
+            CancelBuilding();
+            return;
+        }
 
         Ray ray =
             mainCamera.ScreenPointToRay(
@@ -244,64 +335,24 @@ public class BuildingSystem : MonoBehaviour
             return;
         }
 
-        float distance =
-            Vector3.Distance(
-                player.position,
-                hit.point
-            );
-
-        if (distance > buildDistance)
+        if (player != null)
         {
-            Debug.Log(
-                "Playerdan juda uzoq!"
-            );
+            float distance =
+                Vector3.Distance(
+                    player.position,
+                    hit.point
+                );
 
-            return;
+            if (distance > buildDistance)
+            {
+                Debug.Log(
+                    "Playerdan juda uzoq!"
+                );
+
+                return;
+            }
         }
 
-        Building building =
-            previewObject.GetComponent<Building>();
-
-        if (building == null)
-        {
-            Debug.LogError(
-                "Prefabda Building componenti yo'q!"
-            );
-
-            return;
-        }
-
-        int cost =
-            building.GetCost();
-
-        if (ResourceManager.Instance == null)
-        {
-            Debug.LogError(
-                "ResourceManager topilmadi!"
-            );
-
-            return;
-        }
-
-        if (!ResourceManager.Instance
-            .CanAfford(cost))
-        {
-            Debug.Log(
-                "Pul yetarli emas! Cost: " +
-                cost
-            );
-
-            return;
-        }
-
-        bool spent =
-            ResourceManager.Instance
-                .SpendMoney(cost);
-
-        if (!spent)
-            return;
-
-        // Aynan mouse bosilgan joy
         Vector3 finalPosition =
             hit.point;
 
@@ -317,12 +368,7 @@ public class BuildingSystem : MonoBehaviour
 
         Debug.Log(
             "Building qurildi: " +
-            selectedPrefab.name
-        );
-
-        Debug.Log(
-            "Cost: " +
-            cost
+            building.GetBuildingType()
         );
 
         previewObject = null;
@@ -358,9 +404,7 @@ public class BuildingSystem : MonoBehaviour
     // PREVIEW MODE
     // ==================================================
 
-    private void SetPreviewMode(
-        bool preview
-    )
+    private void SetPreviewMode(bool preview)
     {
         if (previewObject == null)
             return;
@@ -369,9 +413,7 @@ public class BuildingSystem : MonoBehaviour
             previewObject
                 .GetComponentsInChildren<Collider>();
 
-        foreach (
-            Collider collider
-            in colliders)
+        foreach (Collider collider in colliders)
         {
             if (collider != null)
             {

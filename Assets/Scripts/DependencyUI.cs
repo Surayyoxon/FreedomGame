@@ -10,9 +10,8 @@ public class DependencyUI : MonoBehaviour
     [SerializeField] private TMP_Text technologyText;
     [SerializeField] private TMP_Text independenceText;
 
-    [Header("Resource Texts")]
+    [Header("Resource Text")]
     [SerializeField] private TMP_Text foodAmountText;
-    [SerializeField] private TMP_Text moneyText;
 
     private void Update()
     {
@@ -75,16 +74,6 @@ public class DependencyUI : MonoBehaviour
             foodAmountText.text =
                 "Food: " +
                 ResourceManager.Instance.GetFood();
-        }
-
-        // MONEY
-
-        if (ResourceManager.Instance != null &&
-            moneyText != null)
-        {
-            moneyText.text =
-                "MONEY: $" +
-                ResourceManager.Instance.GetMoney();
         }
     }
 }

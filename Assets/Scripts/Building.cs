@@ -113,8 +113,7 @@ public class Building : MonoBehaviour
             ObjectiveManager.Instance
                 .BuildingCompleted(buildingType);
 
-            ObjectiveManager.Instance
-                .CheckFinalObjective();
+          
         }
     }
 
