@@ -108246,8 +108246,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 680894154}
   m_PrefabAsset: {fileID: 0}
-<<<<<<< Updated upstream
-=======
 --- !u!1 &680933292 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 7fd2f2fb53340a24bb8bc7e7cf915010,
@@ -108324,7 +108322,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.0061147898, y: 0.01116595, z: 0.0030838198}
   m_Center: {x: 0.000018605031, y: 0.005582975, z: -0.00011725002}
->>>>>>> Stashed changes
 --- !u!4 &681198425 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5081204490894684594, guid: 01c5a603e9c5ffd4f91981687551b414,
@@ -351444,8 +351441,5 @@ SceneRoots:
   - {fileID: 1907912104}
   - {fileID: 2031619546}
   - {fileID: 940810827}
-<<<<<<< Updated upstream
-=======
   - {fileID: 1574064023}
   - {fileID: 1056730450}
->>>>>>> Stashed changes
