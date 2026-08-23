@@ -24,6 +24,9 @@ public class GameManager : MonoBehaviour
     [Header("Objective UI")]
     [SerializeField] private GameObject objectivePanel;
 
+    [Header("Dependency UI")]
+    [SerializeField] private GameObject dependencyPanel;
+
     [Header("Victory UI")]
     [SerializeField] private GameObject victoryPanel;
 
@@ -49,45 +52,54 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        // =========================
+        // =========================================
         // INTRO
-        // =========================
+        // =========================================
 
         if (introPanel != null)
         {
             introPanel.SetActive(true);
         }
 
-        // =========================
+        // =========================================
         // BUILD UI
-        // =========================
+        // =========================================
 
         if (buildPanel != null)
         {
             buildPanel.SetActive(false);
         }
 
-        // =========================
+        // =========================================
         // OBJECTIVE UI
-        // =========================
+        // =========================================
 
         if (objectivePanel != null)
         {
             objectivePanel.SetActive(false);
         }
 
-        // =========================
+        // =========================================
+        // DEPENDENCY UI
+        // =========================================
+
+        if (dependencyPanel != null)
+        {
+            dependencyPanel.SetActive(false);
+        }
+
+        // =========================================
         // VICTORY UI
-        // =========================
+        // =========================================
 
         if (victoryPanel != null)
         {
             victoryPanel.SetActive(false);
         }
 
-        // =========================
+        // =========================================
         // BUILD BUTTONS
-        // =========================
+        // =========================================
 
         // Faqat Solar boshida ochiq
         if (solarButton != null)
@@ -95,6 +107,7 @@ public class GameManager : MonoBehaviour
             solarButton.interactable = true;
         }
 
+        // Qolganlari lock
         if (wellButton != null)
         {
             wellButton.interactable = false;
@@ -110,9 +123,9 @@ public class GameManager : MonoBehaviour
             workshopButton.interactable = false;
         }
 
-        // =========================
+        // =========================================
         // PLAYER
-        // =========================
+        // =========================================
 
         if (playerController != null)
         {
@@ -126,21 +139,31 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
+        // Intro yopiladi
         if (introPanel != null)
         {
             introPanel.SetActive(false);
         }
 
+        // Build UI ochiladi
         if (buildPanel != null)
         {
             buildPanel.SetActive(true);
         }
 
+        // Objective ochiladi
         if (objectivePanel != null)
         {
             objectivePanel.SetActive(true);
         }
 
+        // Dependency UI ochiladi
+        if (dependencyPanel != null)
+        {
+            dependencyPanel.SetActive(true);
+        }
+
+        // Player yurishi ochiladi
         if (playerController != null)
         {
             playerController.SetMovementEnabled(true);
@@ -155,12 +178,20 @@ public class GameManager : MonoBehaviour
 
     public void UnlockWell()
     {
-        if (wellButton != null)
+        if (wellButton == null)
         {
-            wellButton.interactable = true;
+            Debug.LogError(
+                "Well Button GameManager Inspector'ga ulanmagan!"
+            );
+
+            return;
         }
 
-        Debug.Log("Well unlocked!");
+        wellButton.interactable = true;
+
+        Debug.Log(
+            "💧 WELL BUTTON UNLOCKED!"
+        );
     }
 
     // =========================================
@@ -169,12 +200,20 @@ public class GameManager : MonoBehaviour
 
     public void UnlockFarm()
     {
-        if (farmButton != null)
+        if (farmButton == null)
         {
-            farmButton.interactable = true;
+            Debug.LogError(
+                "Farm Button GameManager Inspector'ga ulanmagan!"
+            );
+
+            return;
         }
 
-        Debug.Log("Farm unlocked!");
+        farmButton.interactable = true;
+
+        Debug.Log(
+            "🌾 FARM BUTTON UNLOCKED!"
+        );
     }
 
     // =========================================
@@ -183,36 +222,44 @@ public class GameManager : MonoBehaviour
 
     public void UnlockWorkshop()
     {
-        if (workshopButton != null)
+        if (workshopButton == null)
         {
-            workshopButton.interactable = true;
+            Debug.LogError(
+                "Workshop Button GameManager Inspector'ga ulanmagan!"
+            );
+
+            return;
         }
 
-        Debug.Log("Workshop unlocked!");
+        workshopButton.interactable = true;
+
+        Debug.Log(
+            "🔧 WORKSHOP BUTTON UNLOCKED!"
+        );
     }
 
     // =========================================
-    // TASK UNLOCK METHODS
+    // TASK LOGS
     // =========================================
 
     public void UnlockWellTask()
     {
         Debug.Log(
-            "New Objective: Collect 3 materials for Well."
+            "🎯 New Objective: Find 3 materials for Well."
         );
     }
 
     public void UnlockFarmTask()
     {
         Debug.Log(
-            "New Objective: Collect 3 seeds for Farm."
+            "🎯 New Objective: Find 3 seeds for Farm."
         );
     }
 
     public void UnlockWorkshopTask()
     {
         Debug.Log(
-            "New Objective: Collect 3 parts for Workshop."
+            "🎯 New Objective: Find 3 parts for Workshop."
         );
     }
 
@@ -227,6 +274,7 @@ public class GameManager : MonoBehaviour
 
         gameWon = true;
 
+        // Victory sound
         if (victorySound != null)
         {
             AudioSource.PlayClipAtPoint(
@@ -236,31 +284,43 @@ public class GameManager : MonoBehaviour
             );
         }
 
+        // Victory UI
         if (victoryPanel != null)
         {
             victoryPanel.SetActive(true);
         }
 
+        // Build UI yopiladi
         if (buildPanel != null)
         {
             buildPanel.SetActive(false);
         }
 
+        // Objective UI yopiladi
         if (objectivePanel != null)
         {
             objectivePanel.SetActive(false);
         }
 
+        // Dependency UI yopiladi
+        if (dependencyPanel != null)
+        {
+            dependencyPanel.SetActive(false);
+        }
+
+        // Player to'xtaydi
         if (playerController != null)
         {
             playerController.SetMovementEnabled(false);
         }
 
-        Debug.Log("VILLAGE IS INDEPENDENT!");
+        Debug.Log(
+            "🏆 VILLAGE IS INDEPENDENT!"
+        );
     }
 
     // =========================================
-    // RESTART
+    // RESTART GAME
     // =========================================
 
     public void RestartGame()

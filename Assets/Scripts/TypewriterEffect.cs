@@ -23,7 +23,7 @@ public class TypewriterEffect : MonoBehaviour
 
         "Lekin qishloq o'z kuchi bilan yashay oladi.",
 
-        "O'zimiz quring.\nO'zimiz ishlab chiqaring.\nO'z kelajagimizni o'zimiz yarating.",
+        "O'zingiz quring.\nO'zingiz ishlab chiqaring.\nO'z kelajagingizni o'zingiz yarating.",
 
         "QISHLOQNI MUSTAQIL QILING."
     };
